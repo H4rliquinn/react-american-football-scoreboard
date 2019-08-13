@@ -31,9 +31,10 @@ function App() {
   const [awayScore,setAwayScore]=useState(0);
   const [quarter,setQuarter]=useState(1);
 //start @ 15 min
-  let time=useRef(841);
-  let currMin=Math.floor(time.current/60);
-  let currSec=parseInt(time.current)-(parseInt(currMin)*60);
+  // let time=useRef(900);
+  const [time,setTime]=useState(900);
+  let currMin=Math.floor(time/60);
+  let currSec=parseInt(time)-(parseInt(currMin)*60);
   let displaySec=0;
   if (parseInt(currSec)<10){
     displaySec="0"+String(currSec);
@@ -43,18 +44,27 @@ function App() {
   // console.log(parseInt(currMin),time.current,displaySec);
 
   let currTime=currMin+":"+displaySec;
-  
-
-
+  let isActive=true;
   useEffect(() => {
-    let id = setInterval(() => {
-        time.current-=1;
-    }, 1000);
-    // render(<App />, document.getElementById('root'));
-    // return () => clearInterval(id);
-    // console.log(time.current);
+    let interval = null;
+    let isActive=true;
 
-  });
+    if (isActive) {
+      interval = setInterval(() => {
+        setTime(time-1);
+      }, 1000);
+    } else if (!isActive && time !== 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isActive, time]);
+
+  // useEffect(() => {
+  //   let id = setInterval(() => {
+  //     setTime(time-1);
+  //   }, 1000);
+  //   return () => clearInterval(id);
+  // });
 
   // componentDidMount() {
   //   this.timerID = setInterval(
